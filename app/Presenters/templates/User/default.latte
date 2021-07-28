@@ -1,0 +1,38 @@
+{block title}Správa uživatelů{/block}
+
+{block content}
+
+        <a n:href="new" class="btn btn-success">Nový uživatel</a>
+        <div class="table-responsive">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Login</th>
+                        <th>Jméno</th>
+                        <th>Poslední přihlášení</th>
+                        <th>Operace</th>
+                      </tr>
+                </thead>
+                <tbody>
+                    <tr n:foreach="$users as $u">
+                        <td>{$u->username} 
+                            <span class="float-right">
+                            {switch $u->role}
+                                {case 0}<span class="badge bg-default">Bez oprávnění</span>
+                                {case 1}<span class="badge bg-primary">Normální</span>
+                                {case 2}<span class="badge bg-warning">Admin</span>
+                                {default} <span class="badge bg-danger">Neznámé oprávnění {$u->role}</span>
+                            {/switch}
+                            </span>
+                        </td>
+                        <td>{$u->name}</td>
+                        <td>{$u->last_login|date:"j. n. Y h:m"}</td>
+                        <td>
+                            <a n:href="edit $u->username" class="btn btn-dark">Upravit</a>
+                            <a n:href="editPassword $u->username" class="btn btn-dark">Změna hesla</a>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>

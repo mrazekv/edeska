@@ -1,0 +1,63 @@
+{block title}Správa záznamů{/block}
+
+{block content}
+
+<div class="row">
+<div class="col-6">
+<div class="form-check form-switch col-6">
+  <input class="form-check-input" type="checkbox" id="flexSwitchCheckDefault" onchange="window.location={link this hidden=>!$hidden, page=>1}" {if $hidden}checked{/if}>
+  <label class="form-check-label col-12" for="flexSwitchCheckDefault">Zobrazit skryté záznamy</label>
+</div>
+</div>
+
+<div class="col-6">
+    <form n:name="searchForm" class="row row-cols-lg-auto g-3 align-items-center">
+        <div class="col-12">
+            <input n:name="search" placeholder="Hledat..">
+        </div>
+        <div class="col-12">
+            <input n:name="send" value="Hledat">
+        </div>
+            
+    </form>
+</div>
+</div>
+<div class="clearfix"></div>
+
+        <div class="table-responsive ">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Název</th>
+                        <th>Skrytí</th>
+                        <th>Operace</th>
+                      </tr>
+                </thead>
+                <tbody>
+                    <tr n:foreach="$documents as $d">
+                        <td>
+                            <a n:href="Homepage:detail $d">{$d->name|truncate:100}</a>
+                            {if $d->description}<br><small style="color: #666;">{$d->description|truncate:100}</small>{/if}
+                            <span class="float-end">
+                                <span class="badge" style="background: {$d->ref('category')->color|noescape}">{$d->ref("category")->name}</span>
+                            </span>
+                        </td>
+                        <td>{$d->show|date:"j. n. Y"} - {$d->hide|date:"j. n. Y"}</td>
+                        <td>
+                            <a n:href="edit $d->id, $requestId" class="btn btn-sm btn-dark"><i class="fa fa-edit"></i> Upravit</a>
+                            <a n:href="files $d->id, $requestId" class="btn btn-sm btn-dark"><i class="fas fa-file"></i> Soubory</a>
+                            <a n:if="!$d->hide || $d->hide < $now"  n:href="hide $d->id, $requestId" class="btn btn-sm btn-danger" onclick="return confirm('Opravdu chcete skrýt (nastavit platnost na včerejšek) vybraného dokumentu?')" title="Skrýt"><i class="fa fa-eye-slash"></i></a>
+                            <a n:if="$user_db->role >= 2 && $d->hide && $d->hide >= $now" n:href="show $d->id, $requestId" class="btn btn-sm btn-success" onclick="return confirm('Opravdu chcete přesunout vybraný dokument do trvalých?')" title=" Zobrazit trvale"><i class="fa fa-eye"></i></a>
+                            <a n:if="$user_db->role >= 2" n:href="delete $d->id, $requestId" class="btn btn-sm btn-danger" onclick="return confirm('Opravdu chcete smazat tento dokument? Akce je nevratná. Nechcete jej radši skrýt?')" title="Smazat"><i class="fa fa-times"></i></a>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        
+
+        <ul class="pagination">
+            {for $i = 1; $i <= $lastPage; $i++ }
+                <li n:class="page-item,$i==$page?active"><a  class="page-link" n:href="this page=>$i">{$i}</a></li>
+            {/for}
+        </ul>

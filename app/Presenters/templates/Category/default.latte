@@ -1,0 +1,28 @@
+{block title}Seznam a správa kategorií{/block}
+
+
+{block content}
+
+<a n:href="new" class="btn btn-primary"><i class="fa fa-plus"></i> Nová kategorie</a>
+
+<hr>
+{foreach $categories as $c}
+<div class="" style="border-left: 5px solid {$c->color|noescape}; padding-left: 5px;">
+<h2>{$c->name}</h2>
+<p class="lead">{$c->description}</p>
+
+
+<p>
+    <a n:href="item:newFiles category=>$c->id" class="btn btn-sm btn-success"><i class="fa fa-plus"></i> Nový dokument</a>
+    <a n:href="edit $c->id" class="btn btn-sm btn-dark"><i class="fa fa-edit"></i> Editovat</a>
+    Platnost {if $c->hide > 0}{$c->hide} dní{else}neomezená{/if}
+</p>
+</div>
+<hr>
+{/foreach}
+
+<h3>Odkazy pro zobrazení</h3>
+<pre class="bg-light p-4">{link //Homepage:latestJson 10}
+{foreach $categories as $c}
+{link //Homepage:latestCategoryJson category=>$c, count=>10}
+{/foreach}</pre>

@@ -1,0 +1,40 @@
+version: '3'
+
+
+
+services:
+
+    nginx:
+        build: ./.docker/nginx/
+        ports:
+            - 8080:80
+        volumes:
+            - ./:/code
+            - ./.docker/nginx/config/nginx.conf:/etc/nginx/nginx.conf
+            - ./.docker/nginx/config/default.conf:/etc/nginx/conf.d/default.conf
+            - ./.docker/nginx/log:/var/log/nginx
+        links:
+            - php:php
+
+    php:
+        build: ./.docker/php/
+        user: "${UID}:${GID}"
+        #ports:
+        #    - 9000:9000
+        volumes:
+            - ./:/code
+            - ./.docker/php/config/php.ini:/usr/local/etc/php/php.ini
+        links:
+            - mysql:mysql
+               
+    mysql:
+        build: ./.docker/mysql/
+        #ports:
+        #    - 3306:3306
+        environment:
+            MYSQL_ROOT_PASSWORD: njiD80:.d
+            MYSQL_DATABASE: 'nette'
+            MYSQL_USER: 'nette'
+            MYSQL_PASSWORD: vgTO|?UyW#
+        volumes:
+            - ./.docker/mysql/db:/var/lib/mysql

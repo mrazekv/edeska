@@ -1,0 +1,21 @@
+{block title}Editace kategorie {$category->name}{/block}
+{block header}{include #parent}
+<link rel="stylesheet" href="https://unpkg.com/huebee@2/dist/huebee.min.css">
+{/block}
+
+{block scripts}
+{include #parent}
+<script src="https://unpkg.com/huebee@2/dist/huebee.pkgd.min.js"></script>
+<script>
+var hueb = new Huebee( '#frm-categoryForm-color', {
+  // options
+  setBGColor: true,
+  saturations: 2,
+});
+</script>
+{/block}
+
+{block content}
+{control categoryForm}
+
+

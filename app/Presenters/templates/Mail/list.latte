@@ -1,0 +1,21 @@
+{block}Úřední deska{/block}
+
+{block title}Příjem novinek mailem{/block}
+
+{block content}
+
+<table class="table">
+<thead>
+    <th>Mail</th>
+    <th>Registrace</th>
+    <th>Akce</th>
+</thead>
+
+{foreach $mail as $m}
+<tr>
+    <td>{$m->mail}</td>
+    <td>{$m->insert_date|date}</td>
+    <td><a n:href="deleteMail $m->mail,backlink=>$request" class="btn btn-danger btn-sm" onclick="return confirm('Opravdu chcete tento mail smazat? Akce je nevratná a uživatel se to nedozví')">Smazat</a></td>
+</tr>
+{/foreach}
+</table>

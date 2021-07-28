@@ -1,0 +1,50 @@
+{block}Úřední deska{/block}
+
+{block title}Úřední deska obce Olomučany{/block}
+{block content}
+
+
+<div class="d-flex text-muted pt-3">
+    <svg class="bd-placeholder-img flex-shrink-0 me-2 rounded" width="8" height="168" xmlns="http://www.w3.org/2000/svg"
+        role="img" aria-label="Placeholder: 32x32" preserveAspectRatio="xMidYMid slice" focusable="false">
+        <title>Placeholder</title>
+        <rect width="100%" height="100%" fill="{$document->ref('category')->color}"></rect>
+    </svg>
+
+    <div>
+
+        <p class="pb-3 mb-0 lh-sm">
+            <strong class="d-block text-gray-dark h2">{$document->name}</strong>
+            {$document->description} <br>
+            <small>{$document->show|date:"j. n. Y"} - {$document->hide|date:"j. n. Y"}</small>
+        </p>
+
+        <p>
+            {foreach $document->related("file") as $f}
+            <a href="{$baseUrl}/data/{$f->filename}" target="_blank" class="btn btn btn-light"><i
+                    class="far {switch $f->mime}{case 'application/pdf'}fa-file-pdf{default}fa-file{/switch}"></i>
+                {$f->name}</a>
+            {/foreach}
+        </p>
+
+        <p>
+            <span class="badge text-light"
+                style="background: {$document->ref('category')->color}">{$document->ref('category')->name}</span>
+        </p>
+    </div>
+
+</div>
+
+<a n:href="Homepage:" class="btn btn-large btn-dark"><i class="fas fa-level-up-alt"></i> Úřední deska</a>
+<a href="//www.olomucany.cz" class="btn btn-large btn-dark"><i class="fa fa-home"></i> Stránky obce</a>
+
+
+{if $user_db->role >= 1}
+<a n:href="Item:edit $document->id, $requestId" class="btn btn-light"><i class="fa fa-edit"></i> Upravit</a>
+<a n:href="Item:files $document->id, $requestId" class="btn btn-light"><i class="fas fa-file"></i> Soubory</a>
+{*<a n:href="Item:back $requestId" class="btn btn-light"><i class="fas fa-file"></i> Zpět</a>
+<a n:href="test2 $requestId" class="btn btn-light"><i class="fas fa-file"></i> Zpět</a>*}
+<a n:if="!$document->hide || $document->hide < $now"  n:href="Item:hide $document->id, $requestId" class="btn btn-danger" onclick="return confirm('Opravdu chcete skrýt (nastavit platnost na včerejšek) vybraného dokumentu?')" title="Skrýt"><i class="fa fa-eye-slash"></i></a>
+<a n:if="$user_db->role >= 2 && $document->hide && $document->hide >= $now" n:href="Item:show $document->id, $requestId" class="btn btn-success" onclick="return confirm('Opravdu chcete přesunout vybraný dokument do trvalých?')" title=" Zobrazit trvale"><i class="fa fa-eye"></i></a>
+<a n:if="$user_db->role >= 2" n:href="Item:delete $document->id, $requestId" class="btn btn-danger" onclick="return confirm('Opravdu chcete smazat tento dokument? Akce je nevratná. Nechcete jej radši skrýt?')" title="Smazat"><i class="fa fa-times"></i></a>
+{/if}

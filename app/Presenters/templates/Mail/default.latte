@@ -1,0 +1,14 @@
+{block}Úřední deska{/block}
+
+{block title}Příjem novinek mailem{/block}
+
+{block scripts}
+{include #parent}
+<script src="https://www.google.com/recaptcha/api.js" async defer></script>
+
+{/block}
+{block content}
+
+<p class="lead">Máte možnost zadat svou emailovou adresu a pokud dojde ke změně na úřední desce, přijde vám o tom upozornění mailem. Toto upozornění bude chodit souhrnně max. 1x za den!</p>
+
+{control addUserForm}

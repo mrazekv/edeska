@@ -1,0 +1,185 @@
+{block}Úřední deska{/block}
+{block title}Úřední deska obce Olomučany{/block}
+
+{block header}
+{include #parent}
+<style>
+    a.doclink {
+        color: #666;
+        text-decoration: none;
+    }
+
+    a.doclink:Hover {
+        color: #aaa;
+    }
+</style>
+{/block}
+{block content}
+
+
+<div class=" text-center">
+    <div class="btn-group" role="group">
+        <a n:href="Homepage:default category=>null" n:class="btn,btn-outline-dark,!$category?active">Vše</a>
+        {foreach $categories as $c}
+        <a n:href="Homepage:default category=>$c"
+            n:class="btn,btn-outline-dark,$category && $category->id == $c->id ?active">{$c->name}</a>
+        {/foreach}
+    </div>
+</div>
+
+
+<div class="alert alert-info mt-4" n:if="!$temp_count && !$long_count">Pro zadanou filtraci není nic k zobrazení</div>
+
+<div class="row">
+    <div class="my-3 p-3 bg-body rounded shadow-sm col-sm-12 col-md-6">
+        <h6 class="border-bottom pb-2 mb-0">Přechodné {if $hidden} a skryté{/if} dokumenty</h6>
+        {foreach $all_temp as $d}
+        <div class="d-flex text-muted pt-3">
+            <svg class="bd-placeholder-img flex-shrink-0 me-2 rounded" width="8" height="78"
+                xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Placeholder: 32x32"
+                preserveAspectRatio="xMidYMid slice" focusable="false">
+                <title>Placeholder</title>
+                <rect width="100%" height="100%" fill="{$d->ref('category')->color}"></rect>
+            </svg>
+
+            <a n:href="detail $d" class="doclink pb-3 mb-0 lh-sm">
+                <strong class="d-block text-gray-dark h4">{$d->name}</strong>
+                {$d->description} <br>
+                <small>{$d->show|date:"j. n. Y"} - {$d->hide|date:"j. n. Y"} 
+                    <span class="badge text-light bg-danger" n:if="$d->hide < $now">Není aktuální</span>
+                </small>
+            </a>
+        </div>
+        <div class="pb-3 mb-0 border-bottom">
+
+            <div class="small float-left ">
+                {foreach $d->related("file") as $f}
+                <a href="{$baseUrl}/data/{$f->filename}" target="_blank" class="btn btn-sm btn-light"><i
+                        class="far {switch $f->mime}{case 'application/pdf'}fa-file-pdf{default}fa-file{/switch}"></i>
+                    {$f->name}</a>
+                {/foreach}
+
+
+                <span class="text-end float-end text-right ">
+                    <span class="badge text-light"
+                        style="background: {$d->ref('category')->color}">{$d->ref('category')->name}</span>
+                </span>
+
+                <div class="clearfix"></div>
+            </div>
+        </div>
+        {else}
+        Žádný dokument
+        {/foreach}
+
+        <div class="d-flex justify-content-between mt-3">
+            <ul class="pagination pagination-sm pagination-dark">
+                {if $tempLastPage > 1}
+                    <li n:if="$tempPage > 5"  class="page-item"><a class="page-link">...</a></li>
+                    {for $i = max(1, $tempPage - 5); $i<= min($tempLastPage, $tempPage + 5); $i++}
+                        <li n:class="page-item,$i==$tempPage?active"><a class="page-link" n:href="default, tempPage=>$i, hidden=>$hidden">{$i}</a></li>
+                    {/for}
+                    <li n:if="$tempLastPage - $tempPage > 5" class="page-item"><a class="page-link">...</a></li>
+                    {*
+                    {if $tempPage > 1}
+                        <li class="page-item"><a class="page-link" n:href="default, tempPage=>1">První</a></li>
+                        <li class="page-item"><a class="page-link" n:href="default, tempPage=>$tempPage - 1">&laquo;</a></li>
+                    {else}
+                        <li class="page-item disabled"><a class="page-link">První</a></li>
+                        <li class="page-item disabled"><a class="page-link">&laquo;</a></li>
+                    {/if}
+
+                    <li class="page-item disabled"><a  class="page-link">{$tempPage} z {$tempLastPage}</a></li>
+
+                    {if $tempPage < $tempLastPage}
+                        <li class="page-item"><a class="page-link"  n:href="default, tempPage=>$tempPage + 1">&raquo;</a></li>
+                        <li class="page-item"><a class="page-link"   n:href="default, tempPage=>$tempLastPage">Poslední</a></li>
+                    {else}
+                        <li class="page-item disabled"><a class="page-link">&raquo;</a></li>
+                        <li class="page-item disabled"><a class="page-link">Poslední</a></li>
+                    {/if}
+                    *}
+                {/if}
+            </ul>
+
+            <small class="float-end text-end">
+                <a n:href="this hidden=>true, tempPage=>1, tempPage=>1" n:if="!$hidden">Včetně skrytých</a>
+                <a n:href="this hidden=>false, tempPage=>1, tempPage=>1" n:if="$hidden">Pouze aktuální</a>
+            </small>
+        </div>
+    </div>
+
+
+
+    <div class="my-3 p-3 bg-body rounded shadow-sm col-sm-12 col-md-6" n:if="$long_count">
+        <h6 class="border-bottom pb-2 mb-0">Dlouhodobé dokumenty</h6>
+        {foreach $all_long as $d}
+        <div class="d-flex text-muted pt-3">
+            <svg class="bd-placeholder-img flex-shrink-0 me-2 rounded" width="8" height="78"
+                xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Placeholder: 32x32"
+                preserveAspectRatio="xMidYMid slice" focusable="false">
+                <title>Placeholder</title>
+                <rect width="100%" height="100%" fill="{$d->ref('category')->color}"></rect>
+            </svg>
+
+            <a n:href="detail $d" class="doclink pb-3 mb-0 lh-sm">
+                <strong class="d-block text-gray-dark h4">{$d->name}</strong>
+                {$d->description} <br>
+                <small>Vyvěšeno {$d->show|date:"j. n. Y"}</small>
+            </a>
+        </div>
+        <div class="pb-3 mb-0 border-bottom">
+
+            <div class="small float-left ">
+                {foreach $d->related("file") as $f}
+                <a href="{$baseUrl}/data/{$f->filename}" target="_blank" class="btn btn-sm btn-light"><i
+                        class="far {switch $f->mime}{case 'application/pdf'}fa-file-pdf{default}fa-file{/switch}"></i>
+                    {$f->name}</a>
+                {/foreach}
+
+
+                <span class="text-end float-end text-right ">
+                    <span class="badge text-light"
+                        style="background: {$d->ref('category')->color}">{$d->ref('category')->name}</span>
+                </span>
+                <div class="clearfix"></div>
+            </div>
+        </div>
+        {/foreach}
+
+        <div class="d-flex justify-content-between mt-3">
+            <ul class="pagination pagination-sm pagination-dark">
+                {if $longLastPage > 1}
+
+                    {for $i = 1; $i<= $longLastPage; $i++}
+                        <li n:class="page-item,$i==$longPage?active"><a class="page-link" n:href="default, longPage=>$i, hidden=>$hidden">{$i}</a></li>
+                    {/for}
+                    {*
+                    {if $longPage > 1}
+                        <li class="page-item"><a class="page-link" n:href="default, longPage=>1">První</a></li>
+                        <li class="page-item"><a class="page-link" n:href="default, longPage=>$longPage - 1">&laquo;</a></li>
+                    {else}
+                        <li class="page-item disabled"><a class="page-link">První</a></li>
+                        <li class="page-item disabled"><a class="page-link">&laquo;</a></li>
+                    {/if}
+
+                    <li class="page-item disabled"><a  class="page-link">{$longPage} z {$longLastPage}</a></li>
+
+                    {if $longPage < $longLastPage}
+                        <li class="page-item"><a class="page-link"  n:href="default, longPage=>$longPage + 1">&raquo;</a></li>
+                        <li class="page-item"><a class="page-link"   n:href="default, longPage=>$longLastPage">Poslední</a></li>
+                    {else}
+                        <li class="page-item disabled"><a class="page-link">&raquo;</a></li>
+                        <li class="page-item disabled"><a class="page-link">Poslední</a></li>
+                    {/if} *}
+                {/if}
+            </ul>
+
+            <small class="float-end text-end">
+                <a n:href="this hidden=>true, longPage=>1, tempPage=>1" n:if="!$hidden">Včetně skrytých</a>
+                <a n:href="this hidden=>false, longPage=>1, tempPage=>1" n:if="$hidden">Pouze aktuální</a>
+            </small>
+        </div>
+
+    </div>
+</div>
