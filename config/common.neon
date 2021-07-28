@@ -1,0 +1,30 @@
+parameters:
+
+
+application:
+	errorPresenter: Error
+	mapping:
+		*: App\*Module\Presenters\*Presenter
+
+
+session:
+	expiration: 20 days
+	save_path: %tempDir%/session
+
+
+di:
+	export:
+		parameters: no
+		tags: no
+
+extensions:
+	recaptcha: ReCaptchaControl\DI\Extension
+
+
+
+services:
+	- App\Router\RouterFactory
+	router: @App\Router\RouterFactory::createRouter()
+	security.passwords: Nette\Security\Passwords(::PASSWORD_BCRYPT, [cost: 12])
+	- App\ProjectAuth
+

@@ -1,0 +1,17 @@
+
+recaptcha:
+	# required
+	siteKey: ""
+	secretKey: ""
+
+	# optional
+	methodName: 'addReCaptcha'
+	requester: ReCaptchaControl\Http\Requester\CurlRequester
+
+parameters:
+
+
+database:
+	dsn: 'mysql:host=TBD;dbname=TBD'
+	user: 'TBD'
+	password: 'TBD'
